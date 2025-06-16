@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
+
+variable_exists_in_env() {
+  grep -q "$1=" .env 2>/dev/null
+  return $?
+}
+
+# only add non-existing variables in '.env' file
+add_variable_to_env_file() {
+  if ! variable_exists_in_env "$1" ; then
+    echo "  - Add $1=$2 to .env"
+    echo "$1=$2" >>.env
+  fi
+}
+
+add_tirrex_workspace_to_env_file() {
+  if variable_exists_in_env TIRREX_WORKSPACE ; then
+    return
+  fi
+
+  for dir in '../tirrex_workspace' '../tirrex_ws' '/opt/tirrex_workspace' '/opt/tirrex_ws' ; do
+    if [[ -d "${dir}" ]] ; then
+      add_variable_to_env_file TIRREX_WORKSPACE $(readlink -f "${dir}")
+      return
+    fi
+  done
+
+  echo >&2 'Error: unable to find tirrex_workspace.'
+  echo >&2 '  You have to check that this directory is at the same level than this workspace'
+  echo >&2 '  or in the /opt directory. The name can be "tirrex_workspace" or "tirrex_ws".'
+}
+
+initialize_env_file() {
+  echo 'Initialize ".env" file'
+  add_variable_to_env_file UID "$(id -u)"
+  add_variable_to_env_file GID "$(id -g)"
+  add_variable_to_env_file USER "$(whoami)"
+  add_variable_to_env_file WORKSPACE "$(pwd)"
+  add_tirrex_workspace_to_env_file
+}
+
+initialize_env_file
