@@ -21,6 +21,7 @@ add_tirrex_workspace_to_env_file() {
     return
   fi
 
+  # look for the tirrex workspace directory (the order is the priority)
   for dir in '../tirrex_workspace' '../tirrex_ws' '/opt/tirrex_workspace' '/opt/tirrex_ws' ; do
     if [[ -d "${dir}" ]] ; then
       add_variable_to_env_file TIRREX_WORKSPACE $(readlink -f "${dir}")
