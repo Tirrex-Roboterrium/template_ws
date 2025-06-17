@@ -6,38 +6,38 @@
 # define YAML anchors to factorize some elements to add in all services
 x-anchors:
   common: &common  # the content of this block will be added every time there is a '*common'
-    volumes:  # add tirrex workspace (used as extended workspace)
-      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z
+    volumes:
+      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z  # extend tirrex_workspace
     environment:
-      - TIRREX_WORKSPACE
+      - TIRREX_WORKSPACE  # used in /ros_setup.sh to extend the specified workspace
     
 
 services:
-  base:
+  base:  # basic docker config to open a shell in the ROS envorinment
     <<: *common
-    extends:
+    extends:  # the real docker configuration is in common.yaml from tirrex_workspace
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
       service: base
 
-  build:
+  build:  # add params to build an additional docker layer that add the host user inside the image
     <<: *common
     extends:
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
       service: build
 
-  x11_base:
+  x11_base:  # add params to start graphical programs
     <<: *common
     extends:
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
       service: x11_base
 
-  x11_gpu:
+  x11_gpu:  # add params to use nvidia GPU (based on x11_base)
     <<: *common
     extends:
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
       service: x11_gpu
 
-  x11_robot:
+  x11_robot:  # add params to open graphical programs through ssh
     <<: *common
     extends:
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
