@@ -1,0 +1,12 @@
+/build/
+/install/
+/log/
+/gazebo/
+/.cache/
+/.venv/
+/.devcontainer/
+/.vscode/
+
+/.env
+*.dat
+recorded.traj

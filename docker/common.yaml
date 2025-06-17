@@ -1,0 +1,44 @@
+# This file allows to define common parameters to start the docker compose services.
+# Most of the parameters are directly taken from the common.yaml file defined in the tirrex
+# workspace. This file only add a volume to bind the the tirrex_workspace directory inside these
+# containers. All the services defined here are the same than the tirrex one.
+
+# define YAML anchors to factorize some elements to add in all services
+x-anchors:
+  common: &common  # the content of this block will be added every time there is a '*common'
+    volumes:  # add tirrex workspace (used as extended workspace)
+      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z
+    environment:
+      - TIRREX_WORKSPACE
+    
+
+services:
+  base:
+    <<: *common
+    extends:
+      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: base
+
+  build:
+    <<: *common
+    extends:
+      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: build
+
+  x11_base:
+    <<: *common
+    extends:
+      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: x11_base
+
+  x11_gpu:
+    <<: *common
+    extends:
+      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: x11_gpu
+
+  x11_robot:
+    <<: *common
+    extends:
+      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: x11_robot

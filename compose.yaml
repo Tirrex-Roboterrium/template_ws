@@ -1,10 +1,22 @@
+x-extends:
+  base: &base  # Create 'base' aliases that can be referenced using '*base'
+    extends:
+      file: docker/common.yaml
+      service: x11_base
+    profiles: [optional]
+
+  build: &build
+    extends:
+      file: docker/common.yaml
+      service: build
+    profiles: [optional]
+
+
 services:
   compile:
     <<: *build
     command: 'colcon --log-base /dev/null build --symlink-install --event-handlers event_log- log-'
 
   bash:
-    <<: *x11
-    volumes:
-      - $HOME/data:$HOME/data
+    <<: *base
     command: 'bash --rcfile /etc/bash.bashrc'

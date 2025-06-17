@@ -29,8 +29,8 @@ add_tirrex_workspace_to_env_file() {
   done
 
   echo >&2 'Error: unable to find tirrex_workspace.'
-  echo >&2 '  You have to check that this directory is at the same level than this workspace'
-  echo >&2 '  or in the /opt directory. The name can be "tirrex_workspace" or "tirrex_ws".'
+  echo >&2 '  You have to check that this directory is at the same level than this workspace or'
+  echo >&2 '  in the /opt directory. The name can be "tirrex_workspace" or "tirrex_ws".'
 }
 
 initialize_env_file() {
