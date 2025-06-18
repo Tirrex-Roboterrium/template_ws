@@ -20,7 +20,7 @@ services:
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
       service: base
 
-  build:  # add params to build an additional docker layer that add the host user inside the image
+  build:  # build the docker image using the Dockfile of this workspace
     <<: *common
     extends:
       service: base
@@ -33,7 +33,6 @@ services:
         GID: ${GID}
         USER: ${USER}
         HOME: ${HOME}
-
 
   x11_base:  # add params to start graphical programs
     <<: *common
