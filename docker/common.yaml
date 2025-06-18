@@ -10,6 +10,7 @@ x-anchors:
       - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z  # extend tirrex_workspace
     environment:
       - TIRREX_WORKSPACE  # used in /ros_setup.sh to extend the specified workspace
+    image: ${IMAGE_NAME}  # (read from .env) the name of directory + the user as tag
     
 
 services:
@@ -22,8 +23,17 @@ services:
   build:  # add params to build an additional docker layer that add the host user inside the image
     <<: *common
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
-      service: build
+      service: base
+    build:
+      context: ../
+      ssh: [default]
+      args:
+        FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
+        UID: ${UID}
+        GID: ${GID}
+        USER: ${USER}
+        HOME: ${HOME}
+
 
   x11_base:  # add params to start graphical programs
     <<: *common

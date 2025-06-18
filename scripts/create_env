@@ -40,7 +40,9 @@ initialize_env_file() {
   add_variable_to_env_file GID "$(id -g)"
   add_variable_to_env_file USER "$(whoami)"
   add_variable_to_env_file WORKSPACE "$(pwd)"
+  add_variable_to_env_file IMAGE_NAME "$(basename $(readlink -f .)):$(whoami)"
   add_tirrex_workspace_to_env_file
 }
 
 initialize_env_file
+mkdir -p src
