@@ -1,8 +1,8 @@
 This project is a ROS2 workspace that extends the tirrex_workspace.
 Its aim is to provide a simple way to work with tirrex and TSCF developments without having to
-recompile everytime the packages of the tirrex workspace (there are more thant 150 of them).
+recompile everytime the packages of the tirrex workspace (there are more than 150 of them).
 To do that, it exploits the concept of
-[underlay/overlay](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html#source-the-overlay)
+[underlay and overlay](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html#source-the-overlay)
 defined by ROS.
 In this case, we use the following workspaces:
 * /opt/ros/humble (underlay)
@@ -22,7 +22,7 @@ If you are an INRAE developer, you have to follow the specific instructions (the
 after installation) and use the repository from the INRAE forge.
 You have to name this workspace `tirrex_workspace` or `tirrex_ws`.
 
-Once you finished installing tirrex_workspace, you can now clone this project at the same level as
+Once you finished installing tirrex_workspace, clone this project at the same level as
 tirrex_workspace.
 You have to choose a different name than `template_ws` because it will create a docker image with
 the same name.
@@ -113,11 +113,11 @@ Disadvantages:
 You can create a different git project for every package (or group of dependent packages) and handle
 them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
 This is the approach used by tirrex_workspace.
-You have to define a `docker/repository` file that contain the URL of each git project you want to
+You have to define a `docker/repositories` file that contain the URL of each git project you want to
 include in your workspace.
 This file can be created using `vcs import` (read the documentation for more information).
 You can automatically clone all your project using the provided script `create_ws`.
-It is also possible to define several `repository` file if you want to provide different URLs for
+It is also possible to define several `repositories` file if you want to provide different URLs for
 the git projects.
 It can be useful if you want to provide URLs with a private token that allows downloading the source
 code without an account on the git server.
