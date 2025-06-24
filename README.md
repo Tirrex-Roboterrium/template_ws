@@ -36,7 +36,7 @@ Replace the `<elements>` by the correct values
 git clone git@<URL_of_your_group>/<name_of_your_project>.git
 ```
 If you receive an error message specifying you don't have permission to use ssh with the server, you
-can follow theses instructions :
+can follow theses instructions:
 [Cloning by SSH](https://forge.inrae.fr/tscf/knowledge/-/blob/main/git/git_clone_project.md?ref_type=heads#cloning-by-ssh).
 
 From the root of the workspace, execute the script `create_env` to create a `.env` that contains
@@ -65,7 +65,7 @@ Everything is already sourced, so you can execute any `ros2 run` or `ros2 launch
 your workspace or tirrex_workspace.
 
 
-# Adding library or programs in the docker image
+# Adding libraries or programs in the docker image
 
 If you want to install programs using `apt install`, you can add them in the
 [Dockerfile](Dockerfile).
