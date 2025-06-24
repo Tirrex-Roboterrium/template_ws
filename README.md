@@ -22,19 +22,27 @@ If you are an INRAE developer, you have to follow the specific instructions (the
 after installation) and use the repository from the INRAE forge.
 You have to name this workspace `tirrex_workspace` or `tirrex_ws`.
 
-Once you finished installing tirrex_workspace, clone this project at the same level as
-tirrex_workspace.
-You have to choose a different name than `template_ws` because it will create a docker image with
-the same name.
-The best idea is to name it like your research project or a short title of your PhD thesis.
-```bash
-git clone git@.../template_ws name_of_your_choice_ws
-cd name_of_your_choice_ws
-```
+After that, you can start creating your own workspace.
+Instead of cloning the repository using the "code" button of the web interface, you will create your
+own version by clicking the "fork" button.
+This action open a new page to specify the name and the namespace of the workspace.
+Choose a name that best describes what you want to do (example: a short title of your PhD thesis or
+the name of your research project) and select the correct namespace of your research group.
+If you don't know it, ask your supervisors.
 
-Execute the script `create_env` to create a `.env` that will contain some environment variables
-useful to build the docker images.
+Once the project is forked, you can download it using `git clone`.
+Replace the `<elements>` by the correct values
 ```bash
+git clone git@<URL_of_your_group>/<name_of_your_project>.git
+```
+If you receive an error message specifying you don't have permission to use ssh with the server, you
+can follow theses instructions :
+[Cloning by SSH](https://forge.inrae.fr/tscf/knowledge/-/blob/main/git/git_clone_project.md?ref_type=heads#cloning-by-ssh).
+
+From the root of the workspace, execute the script `create_env` to create a `.env` that contains
+some environment variables useful to build the docker images.
+```bash
+cd <name_of_your_project>
 ./scripts/create_env
 ```
 
@@ -81,37 +89,15 @@ image.
 ```bash
 docker compile build --no-cache compile
 ```
-These libraries will be automatically installed using
-[rosdep](https://docs.ros.org/en/humble/Tutorials/Intermediate/Rosdep.html).
+These libraries will be automatically installed using `rosdep`.
+If you want more information about managing these dependencies, you can read the
+[rosdep tutorial](https://docs.ros.org/en/humble/Tutorials/Intermediate/Rosdep.html).
 
 
-# Best practices with git
+# Recommended practices with git
 
-To save and distribute your work, the first thing you have to do is to fork this project somewhere
-else.
-This way, you can make your own changes and save it in your own git server.
-Regarding the ROS packages you will create, there are different approaches to handle them:
-
-### Use a unique git project
-
-You handle all the source code of your packages directly from the git project of this workspace.
-It is easier to use because you only have one git project to handle fro everything, but it is more
-complicated to share your work with people that work on other project or outside your laboratory
-because you cannot give the package alone.
-You also have to ignore the path of the git project of other ROS packages if you want to include
-them in your workspace.
-
-Advantages:
-* only one git project to handle
-
-Disadvantages:
-* cannot share the packages alone
-* require to add in the gitignore the path of packages from other people
-
-### Use several git project with VCS
-
-You can create a different git project for every package (or group of dependent packages) and handle
-them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
+You have to create a different git project for every package (or group of dependent packages) and
+handle them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
 This is the approach used by tirrex_workspace.
 You have to define a `docker/repositories` file that contain the URL of each git project you want to
 include in your workspace.
@@ -121,35 +107,3 @@ It is also possible to define several `repositories` file if you want to provide
 the git projects.
 It can be useful if you want to provide URLs with a private token that allows downloading the source
 code without an account on the git server.
-
-Advantages:
-* allow sharing the packages alone
-* provide several ways to get the packages
-* can work with packages that does not use git
-
-Disadvantages:
-* require to make commits in several git project
-* VS-code does not handle easily several git project (use git from the terminal)
-* ignore the `src` directory
-
-### Use git submodules 
-
-It is possible to include git projects inside another one using _git submodules_.
-It is similar to the previous method but instead of using the `docker/repository` file, you create
-(using git commands) a `.gitmodules` file that contain the path and the URL of each git project you
-want to include in your workspace.
-However, it is not possible to provide multiple URL for a same project.
-When you commit changes in one of your ROS package (one of the submodules), the change will be
-detected by the main git project (your workspace).
-You can then decide to make a commit in your main project to save the new version of this package.
-
-Advantages:
-* allow sharing the packages alone
-* all the git projects are managed by the main git project
-* does not require specific tools like `vcs`
-* VS-code handles it correctly
-
-Disadvantages:
-* require to make commits in several git project (submodules)
-* VS-code does not handle easily several git project
-* require to undertstand how git submodule works
