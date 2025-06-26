@@ -15,6 +15,7 @@ import_packages() {
       vcs import --recursive -w6 <"docker/$REPOS_FILE"
     else
       echo "  Nothing to do: there is no file 'docker/$REPOS_FILE'."
+    fi
 }
 
 
