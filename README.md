@@ -46,6 +46,14 @@ cd <name_of_your_project>
 ./scripts/create_env
 ```
 
+By default, this script try to find the directory `tirrex_workspace` or `tirrex_ws` at the same
+level of this one (or in `/opt`).
+If you use a custom location you can manually define where `tirrex_workspace` is:
+```bash
+echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
+```
+
+
 Now you can compile the workspace
 ```bash
 docker compose run --rm compile
