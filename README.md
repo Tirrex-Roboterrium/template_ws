@@ -96,14 +96,32 @@ If you want more information about managing these dependencies, you can read the
 
 # Recommended practices with git
 
-You have to create a different git project for every package (or group of dependent packages) and
-handle them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
+You have to create a different git project for every ROS package (or group of dependent packages)
+and handle them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
 This is the approach used by tirrex_workspace.
 You have to define a `docker/repositories` file that contain the URL of each git project you want to
 include in your workspace.
-This file can be created using `vcs import` (read the documentation for more information).
-You can automatically clone all your project using the provided script `create_ws`.
+If you want to write it manually, you can take inspiration from the
+[repositories](https://github.com/Tirrex-Roboterrium/tirrex_workspace/blob/main/docker/repositories)
+file from tirrex workspace, but the easiest way is to generate it from the existing git projects you
+already have included in your workspace.
+You can generate it using
+```bash
+./scripts/generate_repositories
+```
+This is an important step to share your work with others because they can automatically clone all
+your project using the same script than tirrex_workspace:
+```bash
+./scripts/create_ws
+```
+
 It is also possible to define several `repositories` file if you want to provide different URLs for
 the git projects.
 It can be useful if you want to provide URLs with a private token that allows downloading the source
 code without an account on the git server.
+In this case, you have to specify the path of the repositories you want to use before executing
+`create_ws`.
+This can be done using the following command:
+```bash
+echo REPOS_FILE="<path/of/your/repositories/file>" >> .env
+```

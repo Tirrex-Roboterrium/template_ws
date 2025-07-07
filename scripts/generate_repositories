@@ -1,0 +1,22 @@
+#!/bin/bash
+# This script allows exporting the list of packages to the file docker/repositories
+
+repos_file=docker/repositories
+
+cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
+
+# avoid overwriting repos file by default
+if [[ -e "${repos_file}" ]] ; then
+  echo -n "File '${repos_file}' already exist. Do you want to overwrite it? [y/N]: "
+  read answer
+  if [[ "${answer}" != 'y' && "${answer}" != 'Y' ]] ; then
+    echo >&2 "Export canceled"
+    exit 0
+  fi
+fi
+
+# vcs export is bugged when the workspace is a git project (wrong path for the packages)
+# dirty solution: move .git directory before executing the export command
+mv .git .git_tmp
+vcs export >"${repos_file}"
+mv .git_tmp .git
