@@ -1,5 +1,5 @@
-# This file allows to define common parameters to start the docker compose services.
-# Most of the parameters are directly taken from the common.yaml file defined in the tirrex
+# This file defines common parameters to start the docker compose services.
+# Most of these parameters are directly taken from the common.yaml file defined in the tirrex
 # workspace. This file only add a volume to bind the the tirrex_workspace directory inside these
 # containers. All the services defined here are the same than the tirrex one.
 
@@ -14,7 +14,7 @@ x-anchors:
     
 
 services:
-  base:  # basic docker config to open a shell in the ROS envorinment
+  base:  # basic docker config to open a shell in the ROS environment
     <<: *common
     extends:  # the real docker configuration is in common.yaml from tirrex_workspace
       file: ${TIRREX_WORKSPACE}/docker/common.yaml
@@ -28,7 +28,7 @@ services:
       context: ../
       ssh: [default]
       args:
-        FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
+        FROM_IMAGE: ${TIRREX_IMAGE}
         UID: ${UID}
         GID: ${GID}
         USER: ${USER}

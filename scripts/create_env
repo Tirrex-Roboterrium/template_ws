@@ -46,6 +46,7 @@ initialize_env_file() {
   add_variable_to_env_file USER "$(whoami)"
   add_variable_to_env_file WORKSPACE "$(pwd)"
   add_variable_to_env_file IMAGE_NAME "$(basename $(readlink -f .)):$(whoami)"
+  add_variable_to_env_file TIRREX_IMAGE "ghcr.io/tirrex-roboterrium/tirrex_workspace:full"
   add_tirrex_workspace_to_env_file
 }
 
