@@ -1,14 +1,14 @@
 services:
   compile:
     extends:
-      file: docker/common.yaml
+      file: docker/${TIRREX_IMAGE_TAG}.yaml
       service: build
     profiles: [optional]
-    command: 'colcon --log-base /dev/null build --symlink-install --event-handlers event_log- log-'
+    command: colcon --log-base /dev/null build --symlink-install --event-handlers event_log- log-
 
   bash:
     extends:
-      file: docker/common.yaml
+      file: docker/${TIRREX_IMAGE_TAG}.yaml
       service: x11_base
     profiles: [optional]
-    command: 'bash --rcfile /etc/bash.bashrc'
+    command: bash --rcfile /etc/bash.bashrc

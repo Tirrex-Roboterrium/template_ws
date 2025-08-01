@@ -1,8 +1,3 @@
-# This file defines common parameters to start the docker compose services.
-# Most of these parameters are directly taken from the common.yaml file defined in the tirrex
-# workspace. This file only add a volume to bind the tirrex_workspace directory inside these
-# containers. All the services defined here are the same than the tirrex one.
-
 # define YAML anchors to factorize some elements to add in all services
 x-anchors:
   common: &common  # the content of this block will be added every time there is a '*common'
@@ -10,14 +5,13 @@ x-anchors:
       - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z  # extend tirrex_workspace
     environment:
       - TIRREX_WORKSPACE  # used in /ros_setup.sh to extend the specified workspace
-    image: ${IMAGE_NAME}  # (read from .env) the name of directory + the user as tag
     
 
 services:
   base:  # basic docker config to open a shell in the ROS environment
     <<: *common
     extends:  # the real docker configuration is in common.yaml from tirrex_workspace
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      file: full.yaml
       service: base
 
   build:  # build the docker image using the Dockfile of this workspace
@@ -28,7 +22,7 @@ services:
       context: ../
       ssh: [default]
       args:
-        FROM_IMAGE: ${TIRREX_IMAGE}
+        FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
         UID: ${UID}
         GID: ${GID}
         USER: ${USER}
@@ -37,17 +31,17 @@ services:
   x11_base:  # add params to start graphical programs
     <<: *common
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      file: full.yaml
       service: x11_base
 
   x11_gpu:  # add params to use nvidia GPU (based on x11_base)
     <<: *common
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      file: full.yaml
       service: x11_gpu
 
   x11_robot:  # add params to open graphical programs through ssh
     <<: *common
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      file: full.yaml
       service: x11_robot
