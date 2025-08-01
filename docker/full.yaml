@@ -1,90 +1,20 @@
+# define YAML anchors to factorize some elements to add in all services
+x-anchors:
+  common: &common  # the content of this block will be added every time there is a '*common'
+    environment:
+      - TIRREX_WORKSPACE=/opt/tirrex_ws  # override value of .env to make it empty
+    image: ${IMAGE_NAME}
+    
+
 services:
-  base:  # used by services which uses ROS without GUI
-    image: ${IMAGE_NAME}  # (read from .env) the name of directory + the user as tag
-    volumes:
-      - type: bind
-        source: $HOME/.ros  # for logs and records
-        target: $HOME/.ros
-        bind:
-          create_host_path: false  # avoid to create the path with the root user
-          selinux: Z  # keep the file owner on SELinux
-      - type: bind
-        source: $HOME/.bash_history  # to remember shell commands
-        target: $HOME/.bash_history
-        bind:
-          create_host_path: false
-          selinux: Z
-      - type: bind
-        source: $HOME/.config/ros.org  # to remember rqt configuration
-        target: $HOME/.config/ros.org
-        bind:
-          create_host_path: false
-          selinux: Z
-      - type: bind
-        source: $HOME/.gazebo  # downloaded gazebo models and config
-        target: $HOME/.gazebo
-        bind:
-          create_host_path: false
-          selinux: Z
-      - $WORKSPACE:$WORKSPACE:Z
-      - ./cyclonedds_localhost.xml:/dds_config/cyclonedds.xml:ro,Z
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - ../.env
-    environment:
-      - WORKSPACE  # add explicit WORKSPACE and USER to fix a bug in compose v2.34.0
-      - USER
-      # - ROS_LOCALHOST_ONLY=1  # avoid sending multicast on the local network of your office
-      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-      - CYCLONEDDS_URI=file:///dds_config/cyclonedds.xml  # this replaces ROS_LOCALHOST_ONLY=1
-    network_mode: host
-    pid: host  # fix a multicast problem, PID are used by DDS to generate unique GUID
-    ipc: host  # used by ROS2, Qt and X11 (for shared memory)
-    privileged: false
-    stop_signal: SIGINT  # Correctly forward SIGINT on services started with 'compose up'
-
-  x11_base:  # used by services which requires GUI and device access
-    extends:
+  base:  # basic docker config to open a shell in the ROS environment
+    <<: *common
+    extends:  # the real docker configuration is in common.yaml from tirrex_workspace
+      file: common.yaml
       service: base
-    volumes:
-      - /dev:/dev:Z  # bind all devices
-      - /tmp/.X11-unix:/tmp/.X11-unix:Z
-      - $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:Z
-      - type: bind
-        source: $HOME/.Xauthority  # used to open GUI through ssh
-        target: $HOME/.Xauthority
-        bind:
-          create_host_path: false
-          selinux: Z
-    environment:
-      - DISPLAY
-      - XDG_RUNTIME_DIR
-      - GAZEBO_RESOURCE_PATH
-      - GAZEBO_MODEL_PATH
-    device_cgroup_rules:  # read/write access to device files
-      - 'c 13:* rmw'   # joystick
-      - 'c 81:* rmw'   # video4linux (realsense)
-      - 'c 166:* rmw'  # USB ACM modems (Drotek, ...)
-      - 'c 188:* rmw'  # USB serial converter (xsens, ...)
-      - 'c 189:* rmw'  # alternative USB serial converter (realsense)
-  
-  x11_gpu:  # used by services which requires GPU (and GUI)
-    extends:
-      service: x11_base
-    environment:  # these variables allows to use the GPU when the nvidia profile is 'on-demand'
-      - __NV_PRIME_RENDER_OFFLOAD=1
-      - __GLX_VENDOR_LIBRARY_NAME=nvidia
-      - NVIDIA_DRIVER_CAPABILITIES=all
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
 
-  build:  # build the docker image using the Dockerfile of this workspace
+  build:  # build the docker image using the Dockfile of this workspace
+    <<: *common
     extends:
       service: base
     build:
@@ -96,3 +26,21 @@ services:
         GID: ${GID}
         USER: ${USER}
         HOME: ${HOME}
+
+  x11_base:  # add params to start graphical programs
+    <<: *common
+    extends:
+      file: common.yaml
+      service: x11_base
+
+  x11_gpu:  # add params to use nvidia GPU (based on x11_base)
+    <<: *common
+    extends:
+      file: common.yaml
+      service: x11_gpu
+
+  x11_robot:  # add params to open graphical programs through ssh
+    <<: *common
+    extends:
+      file: common.yaml
+      service: x11_robot

@@ -1,53 +1,103 @@
-# This file defines common parameters to start the docker compose services.
-# Most of these parameters are directly taken from the common.yaml file defined in the tirrex
-# workspace. This file only add a volume to bind the tirrex_workspace directory inside these
-# containers. All the services defined here are the same than the tirrex one.
-
-# define YAML anchors to factorize some elements to add in all services
-x-anchors:
-  common: &common  # the content of this block will be added every time there is a '*common'
-    volumes:
-      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z  # extend tirrex_workspace
-    environment:
-      - TIRREX_WORKSPACE  # used in /ros_setup.sh to extend the specified workspace
-    image: ${IMAGE_NAME}  # (read from .env) the name of directory + the user as tag
-    
-
 services:
-  base:  # basic docker config to open a shell in the ROS environment
-    <<: *common
-    extends:  # the real docker configuration is in common.yaml from tirrex_workspace
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
-      service: base
+  base:  # used by services which uses ROS without GUI
+    image: tirrex_workspace:$USER  # add username to avoid image collision on multi-user systems
+    volumes:
+      - type: bind
+        source: $HOME/.ros  # for logs and records
+        target: $HOME/.ros
+        bind:
+          create_host_path: false  # avoid to create the path with the root user
+          selinux: Z  # keep the file owner on SELinux
+      - type: bind
+        source: $HOME/.bash_history  # to remember commands
+        target: $HOME/.bash_history
+        bind:
+          create_host_path: false
+          selinux: Z
+      - type: bind
+        source: $HOME/.config/ros.org  # to remember rqt configuration
+        target: $HOME/.config/ros.org
+        bind:
+          create_host_path: false
+          selinux: Z
+      - type: bind
+        source: $HOME/.gazebo
+        target: $HOME/.gazebo
+        bind:
+          create_host_path: false
+          selinux: Z
+      - $WORKSPACE:$WORKSPACE:Z
+      - ./cyclonedds_localhost.xml:/dds_config/cyclonedds.xml:ro,Z
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - ../.env
+    environment:
+      - WORKSPACE  # add explicit WORKSPACE and USER to fix a bug in compose v2.34.0
+      - USER
+      # - ROS_LOCALHOST_ONLY=1  # avoid sending multicast on the local network of your office
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///dds_config/cyclonedds.xml  # this replaces ROS_LOCALHOST_ONLY=1
+    network_mode: host
+    pid: host  # fix a multicast problem, PID are used by DDS to generate unique GUID
+    ipc: host  # used by ROS2, Qt and X11 (for shared memory)
+    privileged: false
+    stop_signal: SIGINT  # Correctly forward SIGINT on services started with 'compose up'
 
-  build:  # build the docker image using the Dockfile of this workspace
-    <<: *common
+  build:
     extends:
       service: base
-    build:
-      context: ../
-      ssh: [default]
-      args:
-        FROM_IMAGE: ${TIRREX_IMAGE}
-        UID: ${UID}
-        GID: ${GID}
-        USER: ${USER}
-        HOME: ${HOME}
+    build: # use tirrex_workspace image but add the host user in it
+      dockerfile_inline: |
+        FROM ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
+        RUN groupadd -g ${GID-} $USER && \
+            useradd -u ${UID-} -g ${GID-} -s /bin/bash -d $HOME -m -G dialout $USER
+        RUN sudo -u $USER touch $HOME/.bash_history && \
+            sudo -u $USER mkdir -p $HOME/.config/ros.org $HOME/.gazebo
+        VOLUME $HOME/.config/ros.org
+        VOLUME $HOME/.gazebo
 
-  x11_base:  # add params to start graphical programs
-    <<: *common
+  x11_base:  # used by services which requires GUI and device access
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
+      service: base
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:Z
+      - $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:Z
+      - /dev:/dev:Z  # bind all devices
+    environment:
+      - DISPLAY
+      - XDG_RUNTIME_DIR
+      - GAZEBO_RESOURCE_PATH
+      - GAZEBO_MODEL_PATH
+    device_cgroup_rules:  # read/write access to device files
+      - 'c 13:* rmw'   # joystick
+      - 'c 81:* rmw'   # video4linux (realsense)
+      - 'c 166:* rmw'  # USB ACM modems (Drotek, ...)
+      - 'c 188:* rmw'  # USB serial converter (xsens, ...)
+      - 'c 189:* rmw'  # alternative USB serial converter (realsense)
+  
+  x11_gpu:  # used by services which requires GPU (and GUI)
+    extends:
       service: x11_base
+    environment:  # these variables allows to use the GPU when the nvidia profile is 'on-demand'
+      - __NV_PRIME_RENDER_OFFLOAD=1
+      - __GLX_VENDOR_LIBRARY_NAME=nvidia
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
-  x11_gpu:  # add params to use nvidia GPU (based on x11_base)
-    <<: *common
+  x11_robot:  # used by services started on a robot
     extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
-      service: x11_gpu
-
-  x11_robot:  # add params to open graphical programs through ssh
-    <<: *common
-    extends:
-      file: ${TIRREX_WORKSPACE}/docker/common.yaml
-      service: x11_robot
+      service: x11_base
+    volumes:
+      - type: bind
+        source: $HOME/.Xauthority
+        target: $HOME/.Xauthority
+        bind:
+          create_host_path: false
+          selinux: Z

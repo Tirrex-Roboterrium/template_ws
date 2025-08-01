@@ -1,0 +1,13 @@
+repositories:
+  template_ws:
+    type: git
+    url: git@forge.inrae.fr:tirrex/template_ws.git
+    version: main
+  template_ws/src/romea_core/romea_gps:
+    type: git
+    url: git@gitlab-ssh.irstea.fr:romea_core/romea_gps.git
+    version: main
+  template_ws/src/romea_ros2/interfaces/sensors/romea_gps:
+    type: git
+    url: git@gitlab-ssh.irstea.fr:romea_ros2/interfaces/sensors/romea_gps.git
+    version: main

@@ -1,0 +1,20 @@
+#!/bin/bash
+cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
+
+tirrex_remote='git@forge.inrae.fr:tirrex/tirrex_workspace.git'
+
+download_tirrex_file() {
+  if ! git diff --quiet "$1" ; then
+    echo >&2 -n "There is local changes in '$1'. Override? [y/N]: "
+    read choice
+    if ! [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
+      return
+    fi
+  fi
+
+  echo "Update $1"
+  git archive --remote="$tirrex_remote" main "$1" | tar -x
+}
+
+download_tirrex_file docker/common.yaml
+download_tirrex_file docker/cyclonedds_localhost.xml

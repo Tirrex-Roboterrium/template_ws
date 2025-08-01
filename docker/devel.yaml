@@ -5,13 +5,14 @@ x-anchors:
       - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:Z  # extend tirrex_workspace
     environment:
       - TIRREX_WORKSPACE  # used in /ros_setup.sh to extend the specified workspace
+    image: ${IMAGE_NAME}
     
 
 services:
   base:  # basic docker config to open a shell in the ROS environment
     <<: *common
     extends:  # the real docker configuration is in common.yaml from tirrex_workspace
-      file: full.yaml
+      file: common.yaml
       service: base
 
   build:  # build the docker image using the Dockfile of this workspace
@@ -31,17 +32,17 @@ services:
   x11_base:  # add params to start graphical programs
     <<: *common
     extends:
-      file: full.yaml
+      file: common.yaml
       service: x11_base
 
   x11_gpu:  # add params to use nvidia GPU (based on x11_base)
     <<: *common
     extends:
-      file: full.yaml
+      file: common.yaml
       service: x11_gpu
 
   x11_robot:  # add params to open graphical programs through ssh
     <<: *common
     extends:
-      file: full.yaml
+      file: common.yaml
       service: x11_robot
