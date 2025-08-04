@@ -1,0 +1,76 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.234.0/containers/cpp
+{
+    "name": "ros2 dev container",
+    "remoteUser": "${localEnv:USER}",
+    "dockerComposeFile": "../compose.yaml",
+    "service": "dev",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": { }
+    },
+    "postCreateCommand": "echo >>~/.bashrc 'source /ros_setup.sh'",
+    "mounts": [
+        "source=projectname-bashhistory,target=/commandhistory,type=volume",
+        "source=${localEnv:HOME}/.config/clang-format,target=/clang-format,type=bind,consistency=cached"
+    ],
+
+    // Set *default* container specific settings.json values on container create.
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.formatOnSave": true,
+                "files.associations": {
+                    "*.repos": "yaml",
+                    "*.world": "xml",
+                    "*.xacro": "xml",
+                    "repositories*": "yaml"
+                },
+                "python.autoComplete.extraPaths": [
+                    "/opt/ros/humble/lib/python3.10/site-packages"
+                ],
+                "python.analysis.extraPaths": [
+                    "/opt/ros/humble/lib/python3.10/site-packages"
+                ],
+                "search.exclude": {
+                    "**/build": true,
+                    "**/install": true,
+                    "**/log": true,
+                    "**/__pycache__": true
+                },
+                "search.useIgnoreFiles": true,
+                "[cpp]": {
+                    "editor.defaultFormatter": "ms-vscode.cpptools"
+                },
+                "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+                "C_Cpp.clang_format_style": "file:/clang-format/clang-format",
+                "C_Cpp.default.cppStandard": "c++17",
+                "C_Cpp.default.cStandard": "c11",
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.autopep8"
+                },
+                "autopep8.args": [
+                    "--max-line-length=100"
+                ],
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "[xml]": {
+                    "editor.defaultFormatter": "redhat.vscode-xml"
+                },
+                "xml.format.maxLineWidth": 100,
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml"
+                },
+                "yaml.format.printWidth": 100
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "ms-iot.vscode-ros",
+                "ms-python.autopep8",
+                "ms-vscode.cpptools-extension-pack",
+                "redhat.vscode-xml",
+                "redhat.vscode-yaml",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
+// vim: filetype=json5

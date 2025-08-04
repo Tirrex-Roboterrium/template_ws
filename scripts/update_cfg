@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
 
-tirrex_remote='git@forge.inrae.fr:tirrex/tirrex_workspace.git'
+tirrex_remote='git@github.com:Tirrex-Roboterrium/tirrex_workspace.git'
 
 download_tirrex_file() {
   if ! git diff --quiet "$1" ; then

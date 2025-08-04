@@ -4,7 +4,6 @@
 /gazebo/
 /.cache/
 /.venv/
-/.devcontainer/
 /.vscode/
 
 /.env

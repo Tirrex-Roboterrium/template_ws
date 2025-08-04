@@ -1,13 +1,19 @@
 services:
-  compile:
+  compile:  # compile the workspace
     extends:
       file: docker/${TIRREX_IMAGE_TAG}.yaml
       service: build
     command: colcon --log-base /dev/null build --symlink-install --event-handlers event_log- log-
 
-  bash:
+  bash:  # open a shell inside the ROS environment of this workspace
     extends:
       file: docker/${TIRREX_IMAGE_TAG}.yaml
       service: x11_base
     profiles: [optional]
     command: bash --rcfile /etc/bash.bashrc
+
+  dev:  # start a container used by IDEs like VS-code
+    extends:
+      file: docker/${TIRREX_IMAGE_TAG}.yaml
+      service: x11_base
+    command: sleep infinity
