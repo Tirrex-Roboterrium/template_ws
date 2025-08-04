@@ -1,3 +1,12 @@
+# This file should be extended by compose.yaml that want to use the devel version of the tirrex
+# workspace. It defines the TIRREX_WORKSPACE environment variable and include the directory of this
+# workspace as a volume. This workspace is used as underlay instead of the default /opt/tirrex_ws.
+# To use it, you have to change the following variables in the .env file at the root of this
+# workspace:
+# TIRREX_WORKSPACE=/path/of/the/tirrex/workspace
+# TIRREX_IMAGE_TAG=devel
+
+
 # define YAML anchors to factorize some elements to add in all services
 x-anchors:
   common: &common  # the content of this block will be added every time there is a '*common'
