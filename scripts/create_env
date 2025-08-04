@@ -47,11 +47,11 @@ initialize_env_file() {
   add_variable_to_env_file GID "$(id -g)"
   add_variable_to_env_file USER "$(whoami)"
   add_variable_to_env_file WORKSPACE "$(pwd)"
-  add_variable_to_env_file IMAGE_NAME "$(basename $(readlink -f .)):$(whoami)"
+  add_variable_to_env_file IMAGE_NAME "$(basename $(pwd)):$(whoami)"
 
   tirrex_image_tag='full'
   if add_tirrex_workspace_to_env_file ; then
-    echo -n "Would you like to use the local tirrex workspace? [y/N]: "
+    echo -n "Would you like to use the local tirrex workspace? (not recommended) [y/N]: "
     read choice
     if [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
       tirrex_image_tag='devel'
@@ -65,6 +65,7 @@ initialize_env_file() {
 # If these files does not exist, the docker will not start because the auto creation is disabled.
 # This prevents docker from creating them using root user.
 create_binded_files() {
+  mkdir -p src
   mkdir -p "${HOME}/.gazebo"
   mkdir -p "${HOME}/.ros"
   mkdir -p "${HOME}/.config/ros.org"
