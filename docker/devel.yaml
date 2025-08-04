@@ -3,7 +3,7 @@
 # workspace as a volume. This workspace is used as underlay instead of the default /opt/tirrex_ws.
 # To use it, you have to change the following variables in the .env file at the root of this
 # workspace:
-# TIRREX_WORKSPACE=/path/of/the/tirrex/workspace
+# TIRREX_WORKSPACE=<path/to/tirrex/workspace>
 # TIRREX_IMAGE_TAG=devel
 
 

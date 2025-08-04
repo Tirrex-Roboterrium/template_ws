@@ -1,3 +1,7 @@
+# This file will be extended by compose.yaml to use the full version of the tirrex docker image.
+# In this version, the tirrex_workspaceis already compiled and installed in /opt/tirrex_ws
+# The environment variable TIRREX_WORKSPACE corresponds to this path.
+
 # define YAML anchors to factorize some elements to add in all services
 x-anchors:
   common: &common  # the content of this block will be added every time there is a '*common'

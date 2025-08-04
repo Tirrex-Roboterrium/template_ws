@@ -16,13 +16,7 @@ This allows keeping a clean tirrex_workspace and simplify its update.
 
 # Installation
 
-You first need to install tirrex_workspace by following instructions in the
-[README of this workspace](https://github.com/Tirrex-Roboterrium/tirrex_workspace).
-If you are an INRAE developer, you have to follow the specific instructions (there is a section
-after installation) and use the repository from the INRAE forge.
-You have to name this workspace `tirrex_workspace` or `tirrex_ws`.
-
-After that, you can start creating your own workspace.
+This project is just a template to create your own workspace.
 Instead of cloning the repository using the "code" button of the web interface, you will create your
 own version by clicking the "fork" button.
 This action open a new page to specify the name and the namespace of the workspace.
@@ -30,7 +24,7 @@ Choose a name that best describes what you want to do (example: a short title of
 the name of your research project) and select the correct namespace of your research group.
 If you don't know it, ask your supervisors.
 
-Once the project is forked, you can download it using `git clone`.
+You first need to download it using `git clone`.
 Replace the `<elements>` by the correct values
 ```bash
 git clone git@<URL_of_your_group>/<name_of_your_project>.git
@@ -46,13 +40,10 @@ cd <name_of_your_project>
 ./scripts/create_env
 ```
 
-By default, this script try to find the directory `tirrex_workspace` or `tirrex_ws` at the same
-level of this one (or in `/opt`).
-If the previous command failed, you can manually define where `tirrex_workspace` is:
-```bash
-echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
-```
-
+This script will try to find the directory `tirrex_workspace` or `tirrex_ws` at the same level of
+this one.
+If this workspace is detected, you can choose to use this one instead of the embedded one, but it is
+not recommended.
 
 Now you can compile the workspace
 ```bash
@@ -61,7 +52,7 @@ docker compose run --rm compile
 
 The first time, this command will create a docker image with the name of your workspace.
 This image is based on the one of tirrex_workspace.
-Regarding the compilation, it will do nothing because you don't have any package at the moment.
+Regarding the compilation, it will do nothing because you don't have any packages at the moment.
 You can now create your own ROS package in `src` directory and start working!
 
 You can open a shell inside the ROS environment using
@@ -71,6 +62,33 @@ docker compose run --rm bash
 This command starts an interactive docker container in your workspace.
 Everything is already sourced, so you can execute any `ros2 run` or `ros2 launch` with a package of
 your workspace or tirrex_workspace.
+
+
+## Using local tirrex_workspace
+
+This approach is not recommended, but if you want to use a local copy of tirrex_workspace instead of
+the one that is included in the docker image, you can follow these instructions.
+
+You first need to install tirrex_workspace by following instructions in the
+[README of this workspace](https://github.com/Tirrex-Roboterrium/tirrex_workspace).
+If you are an INRAE developer, you have to follow the specific instructions (there is a section
+after installation) and use the repository from the INRAE forge.
+This workspace must be installed outside of this project.
+The best is to install it at the same level of this workspace, because it will be detected by the
+`create_env` script and automatically and `TIRREX_WORKSPACE` in the `.env` file at the root of this
+project.
+
+If tirrex_workspace is not found, you can manually define where it is using the following command
+after replacing the value by the correct path
+```bash
+echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
+```
+
+After that, you can easily switch between the embedded tirrex_workspace and the local one by
+changing the value of `TIRREX_IMAGE_TAG` in the `.env` file.
+The possible values are:
+* `full`: use the tirrex_workspace that is included in the docker image
+* `devel`: bind a local version of tirrex_workspace inside the docker container
 
 
 # Adding libraries or programs in the docker image
