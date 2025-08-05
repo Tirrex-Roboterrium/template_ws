@@ -5,6 +5,7 @@
     "remoteUser": "${localEnv:USER}",
     "dockerComposeFile": "../compose.yaml",
     "service": "dev",
+    "workspaceFolder": "${localWorkspaceFolder}",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": { }
     },
@@ -25,12 +26,6 @@
                     "*.xacro": "xml",
                     "repositories*": "yaml"
                 },
-                "python.autoComplete.extraPaths": [
-                    "/opt/ros/humble/lib/python3.10/site-packages"
-                ],
-                "python.analysis.extraPaths": [
-                    "/opt/ros/humble/lib/python3.10/site-packages"
-                ],
                 "search.exclude": {
                     "**/build": true,
                     "**/install": true,
@@ -41,10 +36,11 @@
                 "[cpp]": {
                     "editor.defaultFormatter": "ms-vscode.cpptools"
                 },
-                "C_Cpp.clang_format_path": "/usr/bin/clang-format",
                 "C_Cpp.clang_format_style": "file:/clang-format/clang-format",
                 "C_Cpp.default.cppStandard": "c++17",
                 "C_Cpp.default.cStandard": "c11",
+
+                // python
                 "[python]": {
                     "editor.defaultFormatter": "ms-python.autopep8"
                 },
@@ -52,6 +48,16 @@
                     "--max-line-length=100"
                 ],
                 "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.autoComplete.extraPaths": [
+                    "/opt/tirrex_ws/lib/python3.10/site-packages",
+                    "/opt/ros/humble/lib/python3.10/site-packages"
+                ],
+                "python.analysis.extraPaths": [
+                    "/opt/tirrex_ws/lib/python3.10/site-packages",
+                    "/opt/ros/humble/lib/python3.10/site-packages"
+                ],
+
+                // others
                 "[xml]": {
                     "editor.defaultFormatter": "redhat.vscode-xml"
                 },
