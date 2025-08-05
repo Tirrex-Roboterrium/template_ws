@@ -1,20 +1,28 @@
 #!/bin/bash
 cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
 
-tirrex_remote='git@github.com:Tirrex-Roboterrium/tirrex_workspace.git'
+tirrex='https://raw.githubusercontent.com/Tirrex-Roboterrium/tirrex_workspace/refs/heads/main/'
+template='https://raw.githubusercontent.com/Tirrex-Roboterrium/template_ws/refs/heads/main/'
 
-download_tirrex_file() {
-  if ! git diff --quiet "$1" ; then
-    echo >&2 -n "There is local changes in '$1'. Override? [y/N]: "
+download_git_file() {
+  prefix="$1"
+  file="$2"
+
+  if ! git diff --quiet "$file" ; then
+    echo >&2 -n "There is local changes in '$file'. Override? [y/N]: "
     read choice
     if ! [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
       return
     fi
   fi
 
-  echo "Update $1"
-  git archive --remote="$tirrex_remote" main "$1" | tar -x
+  echo "Update $file"
+  if ! curl -fso "$file" "${prefix}${file}" ; then
+    echo >&2 "  -> failed to download $file"
+  fi
 }
 
-download_tirrex_file docker/common.yaml
-download_tirrex_file docker/cyclonedds_localhost.xml
+download_git_file "$tirrex" docker/common.yaml
+download_git_file "$tirrex" docker/cyclonedds_localhost.xml
+download_git_file "$template" .devcontainer/devcontainer.json
+download_git_file "$template" scripts/update_cfg
