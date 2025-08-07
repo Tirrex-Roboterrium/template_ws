@@ -33,6 +33,8 @@
                     "**/__pycache__": true
                 },
                 "search.useIgnoreFiles": true,
+                "cmake.ignoreCMakeListsMissing": true,
+
                 "[cpp]": {
                     "editor.defaultFormatter": "ms-vscode.cpptools"
                 },
@@ -40,7 +42,6 @@
                 "C_Cpp.default.cppStandard": "c++17",
                 "C_Cpp.default.cStandard": "c11",
 
-                // python
                 "[python]": {
                     "editor.defaultFormatter": "ms-python.autopep8"
                 },
@@ -48,16 +49,7 @@
                     "--max-line-length=100"
                 ],
                 "python.defaultInterpreterPath": "/usr/bin/python3",
-                "python.autoComplete.extraPaths": [
-                    "/opt/tirrex_ws/lib/python3.10/site-packages",
-                    "/opt/ros/humble/lib/python3.10/site-packages"
-                ],
-                "python.analysis.extraPaths": [
-                    "/opt/tirrex_ws/lib/python3.10/site-packages",
-                    "/opt/ros/humble/lib/python3.10/site-packages"
-                ],
 
-                // others
                 "[xml]": {
                     "editor.defaultFormatter": "redhat.vscode-xml"
                 },
@@ -66,10 +58,13 @@
                     "editor.defaultFormatter": "redhat.vscode-yaml"
                 },
                 "yaml.format.printWidth": 100
+
+                // automatically add C++ and python path
+                ros.rosSetupScript: "/opt/tirrex_ws/install/setup.bash",
             },
             // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
-                "ms-iot.vscode-ros",
+                "Ranch-Hand-Robotics.rde-pack",
                 "ms-python.autopep8",
                 "ms-vscode.cpptools-extension-pack",
                 "redhat.vscode-xml",
