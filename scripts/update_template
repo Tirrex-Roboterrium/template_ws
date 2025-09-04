@@ -25,8 +25,8 @@ update_git_file() {
     return 2
   fi
 
-  # Execute again git diff to return 0 if the file have changed
-  if ! git diff --quiet "$file" ; then
+  # Execute again git diff to return 0 if the file has changed
+  if git diff --quiet "$file" ; then
     echo "Updated: $file"
     return 0
   fi
@@ -45,3 +45,5 @@ update_git_file "$template" .devcontainer/devcontainer.json
 update_git_file "$template" scripts/autosync_ws
 update_git_file "$template" scripts/create_env
 update_git_file "$template" scripts/create_ws
+
+exit 0
