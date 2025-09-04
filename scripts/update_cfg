@@ -12,17 +12,27 @@ download_git_file() {
     echo >&2 -n "There is local changes in '$file'. Override? [y/N]: "
     read choice
     if ! [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
-      return
+      return 1
     fi
   fi
 
   echo "Update $file"
   if ! curl -fso "$file" "${prefix}${file}" ; then
     echo >&2 "  -> failed to download $file"
+    return 1
   fi
+
+  return 0
 }
+
+# if this script is updated, it is re-executed to take into account new 'download_git_file' lines
+if [[ -z "${SELF_UPDATE}" ]] && download_git_file "$template" scripts/update_cfg ; then
+  SELF_UPDATE=1 exec "${BASH_SOURCE[0]}"
+fi
 
 download_git_file "$tirrex" docker/common.yaml
 download_git_file "$tirrex" docker/cyclonedds_localhost.xml
 download_git_file "$template" .devcontainer/devcontainer.json
-download_git_file "$template" scripts/update_cfg
+download_git_file "$template" scripts/autosync_ws
+download_git_file "$template" scripts/create_env
+download_git_file "$template" scripts/create_ws
