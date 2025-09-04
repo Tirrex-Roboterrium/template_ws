@@ -1,11 +1,11 @@
 ARG FROM_IMAGE=ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
 
-FROM $FROM_IMAGE
+FROM ${FROM_IMAGE}
 
 # create the same user inside the docker image than the one on your host system
 ARG UID GID HOME USER
-RUN groupadd -g ${GID} $USER && \
-    useradd -u ${UID} -g ${GID} -s /bin/bash -d $HOME -m -G dialout $USER
+RUN groupadd -g "${GID}" "${USER}" && \
+    useradd -u "${UID}" -g "${GID}" -s /bin/bash -d "${HOME}" -m -G dialout "${USER}"
 
 # install all missing packages that you have specified into your package.xml
 RUN --mount=type=bind,source=src,target=/tmp/src \

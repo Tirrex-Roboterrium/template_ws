@@ -23,7 +23,6 @@ services:
       service: base
     build:
       context: ../
-      ssh: [default]
       args:
         FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:full
         UID: ${UID}
