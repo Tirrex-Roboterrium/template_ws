@@ -37,7 +37,7 @@ fi
 sync_files() {
   rsync -ac --info=NAME -e "${ssh_cmd}" --delete \
     --exclude __pycache__  --exclude .git -- \
-    compose.yaml src docker scripts demos README.md \
+    compose.yaml src docker scripts demos README.md Dockerfile \
     "${host}:${remote_path}"
 }
 
