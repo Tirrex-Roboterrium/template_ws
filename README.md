@@ -33,11 +33,11 @@ If you receive an error message specifying you don't have permission to use ssh 
 can follow theses instructions:
 [Cloning by SSH](https://forge.inrae.fr/tscf/knowledge/-/blob/main/git/git_clone_project.md?ref_type=heads#cloning-by-ssh).
 
-From the root of the workspace, execute the script `create_env` to create a `.env` that contains
-some environment variables useful to build the docker images.
+From the root of the workspace, execute the script `create_ws` to create a `.env` that contains
+some environment variables useful to build the docker images, and also clone demos examples.
 ```bash
 cd <name_of_your_project>
-./scripts/create_env
+./scripts/create_ws
 ```
 
 This script will try to find the directory `tirrex_workspace` or `tirrex_ws` at the same level of
