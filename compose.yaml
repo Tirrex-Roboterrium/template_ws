@@ -16,4 +16,5 @@ services:
     extends:
       file: docker/${TIRREX_IMAGE_TAG}.yaml
       service: x11_base
+    profiles: [optional]
     command: sleep infinity
