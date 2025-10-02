@@ -32,7 +32,7 @@ services:
       context: ../
       ssh: [default]
       args:
-        FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:devel
+        FROM_IMAGE: ${FROM_IMAGE:-ghcr.io/tirrex-roboterrium/tirrex_workspace}:devel
         UID: ${UID}
         GID: ${GID}
         USER: ${USER}

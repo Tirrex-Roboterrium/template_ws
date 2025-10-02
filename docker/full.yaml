@@ -24,7 +24,7 @@ services:
     build:
       context: ../
       args:
-        FROM_IMAGE: ghcr.io/tirrex-roboterrium/tirrex_workspace:full
+        FROM_IMAGE: ${FROM_IMAGE:-ghcr.io/tirrex-roboterrium/tirrex_workspace}:full
         UID: ${UID}
         GID: ${GID}
         USER: ${USER}
