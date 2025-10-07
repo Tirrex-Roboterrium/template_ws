@@ -45,5 +45,6 @@ update_git_file "$template" .devcontainer/devcontainer.json
 update_git_file "$template" scripts/autosync_ws
 update_git_file "$template" scripts/create_env
 update_git_file "$template" scripts/create_ws
+update_git_file "$template" scripts/sync_data
 
 exit 0

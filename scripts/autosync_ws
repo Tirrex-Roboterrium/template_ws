@@ -14,7 +14,7 @@ Usage:  $0 [<user>@]<robot_name> [<dest_path>]
 
 Description:
   This script allows to automatically transfer changes in any file of the
-  workspace to a specified robot. It use rsync (with ssh) for the transfer and
+  workspace to a specified robot. It uses rsync (with ssh) for the transfer and
   inotify (apt install inotify-tools) to listen local changes of the workspace
   files. This program should keep running while working on a robot.
 
@@ -29,6 +29,7 @@ fi
 host="$1"
 remote_path="$2"
 ssh_cmd="ssh"
+sync_list="compose.yaml src docker scripts demos README.md Dockerfile"
 
 if [[ -z "$remote_path" ]] ; then
   remote_path=$(basename -- "${PWD}")
@@ -37,7 +38,7 @@ fi
 sync_files() {
   rsync -ac --info=NAME -e "${ssh_cmd}" --delete \
     --exclude __pycache__  --exclude .git -- \
-    compose.yaml src docker scripts demos README.md Dockerfile \
+    $sync_list \
     "${host}:${remote_path}"
 }
 
@@ -49,7 +50,7 @@ echo
 echo "Listen local changes and send them to '${host}:${remote_path}'"
 echo "Listening..."
 
-while inotifywait -rqq -emodify -ecreate -emove -edelete --exclude '\.git' -- '.' ; do
+while inotifywait -rqq -emodify -ecreate -emove -edelete --exclude '\.git' -- $sync_list ; do
   echo -e "\e[1m$(date +%X) change detected, updating remote\e[0m"
   sync_files
 done

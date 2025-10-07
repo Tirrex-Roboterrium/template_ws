@@ -1,0 +1,37 @@
+#!/bin/bash
+cd -- "$(dirname "${BASH_SOURCE[0]}")/.."
+
+if [[ -z "$1" ]] ; then
+  cat >&2 <<EOF
+Usage:  $0 [<user>@]<robot_name> [<dest_path>]
+
+  <user>: name of the user on the embedded computer of the robot.
+      If not specified, use your current username.
+  <robot_name>: hostname (or IP address) of the robot
+  <dest_path>: path used for the workspace directory on the robot.
+      If not specified, it will use the workspace at the root of the home
+      directory.
+
+Description:
+  This script allows to dowload the "data" subdirectory of the remote workspace using rsync.
+  It is synchronized in same directory locally.
+
+Example:
+  $0 pom4x4
+  $0 romea@ceol
+  $0 guest@adap2e01 test/example_workspace
+EOF
+  exit 1
+fi
+
+host="$1"
+local_path="."
+ssh_cmd="ssh"
+
+if [[ -z "$2" ]] ; then
+  remote_path="$(basename -- "${PWD}")/data"
+else
+  remote_path="$2/data"
+fi
+
+rsync -aPc -e "${ssh_cmd}" "${host}:${remote_path}" "${local_path}"
