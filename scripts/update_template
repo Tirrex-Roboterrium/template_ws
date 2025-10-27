@@ -11,8 +11,9 @@ cd "$ws_dir"
 update_git_file() {
   prefix="$1"
   file="$2"
+  chmod_opts="$3"
 
-  if ! git diff --quiet "$file" ; then
+  if [[ -e "$file" ]] && ! git diff --quiet "$file" ; then
     echo >&2 -n "There is local changes in '$file'. Override? [y/N]: "
     read choice
     if ! [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
@@ -25,11 +26,15 @@ update_git_file() {
     return 2
   fi
 
-  # Execute again git diff to return 0 if the file has changed
-  if git diff --quiet "$file" ; then
-    echo "Updated: $file"
+  if [[ "$chmod_opts" ]] ; then
+    chmod "$chmod_opts" -- $file
+  fi
+
+  # return 0 if the file have not changed
+  if [[ $(git ls-files "$file") ]] && git diff --quiet "$file" ; then
     return 0
   fi
+  echo "Updated: $file"
   return 1
 }
 
@@ -42,9 +47,9 @@ fi
 update_git_file "$tirrex" docker/common.yaml
 update_git_file "$tirrex" docker/cyclonedds_localhost.xml
 update_git_file "$template" .devcontainer/devcontainer.json
-update_git_file "$template" scripts/autosync_ws
-update_git_file "$template" scripts/create_env
-update_git_file "$template" scripts/create_ws
-update_git_file "$template" scripts/sync_data
+update_git_file "$template" scripts/autosync_ws +x
+update_git_file "$template" scripts/create_env +x
+update_git_file "$template" scripts/create_ws +x
+update_git_file "$template" scripts/sync_data +x
 
 exit 0

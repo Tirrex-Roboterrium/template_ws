@@ -72,7 +72,7 @@ services:
       - GAZEBO_RESOURCE_PATH
       - GAZEBO_MODEL_PATH
     device_cgroup_rules:  # read/write access to device files
-      - 'c 13:* rmw'   # joystick, input events
+      - 'c 13:* rmw'   # joystick
       - 'c 81:* rmw'   # video4linux (realsense)
       - 'c 166:* rmw'  # USB ACM modems (Drotek, ...)
       - 'c 188:* rmw'  # USB serial converter (xsens, ...)
