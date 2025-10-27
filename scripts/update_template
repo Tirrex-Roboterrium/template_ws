@@ -44,8 +44,8 @@ if [[ -z "${SELF_UPDATE}" ]] && update_git_file "$template" "$self_script" ; the
   SELF_UPDATE=1 exec "$self_script"
 fi
 
-update_git_file "$tirrex" docker/common.yaml
-update_git_file "$tirrex" docker/cyclonedds_localhost.xml
+update_git_file "$template" docker/common.yaml
+update_git_file "$template" docker/cyclonedds_localhost.xml
 update_git_file "$template" .devcontainer/devcontainer.json
 update_git_file "$template" scripts/autosync_ws +x
 update_git_file "$template" scripts/create_env +x

@@ -16,31 +16,6 @@ add_variable_to_env_file() {
   fi
 }
 
-add_tirrex_workspace_to_env_file() {
-  if variable_exists_in_env TIRREX_WORKSPACE ; then
-    return 1
-  fi
-
-  # look for the tirrex workspace directory (the order is the priority)
-  for dir in '../tirrex_workspace' '../tirrex_ws' ; do
-    if [[ -d "${dir}" ]] ; then
-      echo "tirrex workspace detected: ${dir}"
-      add_variable_to_env_file TIRREX_WORKSPACE $(readlink -f "${dir}")
-      return 0
-    fi
-  done
-
-  # echo >&2 'Error: unable to find tirrex_workspace.'
-  # echo >&2 '  You have to check that this directory is at the same level than this workspace or'
-  # echo >&2 '  in the /opt directory. The name can be "tirrex_workspace" or "tirrex_ws".'
-  # echo >&2
-  # echo >&2 '  If you want to use a custom location, you can manually set it using the command'
-  # echo >&2
-  # echo >&2 '    echo TIRREX_WORKSPACE=<custom/path/for/tirrex_workspace> >>.env'
-  # echo >&2
-  return 1
-}
-
 initialize_env_file() {
   echo 'Initialize ".env" file'
   add_variable_to_env_file UID "$(id -u)"
@@ -48,17 +23,6 @@ initialize_env_file() {
   add_variable_to_env_file USER "$(whoami)"
   add_variable_to_env_file WORKSPACE "$(pwd)"
   add_variable_to_env_file IMAGE_NAME "$(basename $(pwd)):$(whoami)"
-
-  tirrex_image_tag='full'
-  if add_tirrex_workspace_to_env_file ; then
-    echo -n "Would you like to use the local tirrex workspace? (not recommended) [y/N]: "
-    read choice
-    if [[ "$choice" = 'Y' || "$choice" = 'y' ]] ; then
-      tirrex_image_tag='devel'
-    fi
-  fi
-
-  add_variable_to_env_file  TIRREX_IMAGE_TAG "$tirrex_image_tag"
 }
 
 # Create files and directories that are binded by docker services.
@@ -70,7 +34,7 @@ create_binded_files() {
   mkdir -p "${HOME}/.ros"
   mkdir -p "${HOME}/.config/ros.org"
   touch -a "${HOME}/.bash_history"
-  touch -a "${HOME}/.Xauthority"  # used to open GUI by ssh
+  touch -a "${HOME}/.Xauthority"  # used to open GUI through ssh
 }
 
 initialize_env_file
