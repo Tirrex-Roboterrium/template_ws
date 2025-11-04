@@ -74,21 +74,28 @@ You first need to install tirrex_workspace by following instructions in the
 If you are an INRAE developer, you have to follow the specific instructions (there is a section
 after installation) and use the repository from the INRAE forge.
 This workspace must be installed outside of this project.
-The best is to install it at the same level of this workspace, because it will be detected by the
-`create_env` script and automatically and `TIRREX_WORKSPACE` in the `.env` file at the root of this
-project.
 
-If tirrex_workspace is not found, you can manually define where it is using the following command
-after replacing the value by the correct path
+After that, you have to define an environment variable `TIRREX_WORKSPACE` that contains the path of
+the tirrex workspace you just have installed
 ```bash
 echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
 ```
 
-After that, you can easily switch between the embedded tirrex_workspace and the local one by
-changing the value of `TIRREX_IMAGE_TAG` in the `.env` file.
-The possible values are:
-* `full`: use the tirrex_workspace that is included in the docker image
-* `devel`: bind a local version of tirrex_workspace inside the docker container
+Now, you can create a `compose.override.yaml` file to change some parameters of the default
+`compose.yaml`.
+For example, to override the `compile` and `bash` services, the file will look like this:
+```yaml
+services:
+  compile:
+    volumes:
+      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:ro
+    environment:
+      - TIRREX_WORKSPACE=${TIRREX_WORKSPACE}
+```
+This file is automatically read by `docker compose`, so the commands do not change.
+If you want to apply that to all services, it is also possible to directly edit
+`docker/common.yaml`.
+In any case, make sure to not commit your changes, unless you want them to apply to everyone.
 
 
 # Adding libraries or programs in the docker image
