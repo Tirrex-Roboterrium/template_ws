@@ -62,6 +62,7 @@ docker compose run --rm bash
 This command starts an interactive docker container in your workspace.
 Everything is already sourced, so you can execute any `ros2 run` or `ros2 launch` with a package of
 your workspace or tirrex_workspace.
+However, it is better to [use a demo](#launching-a-demo) rather than starting launch manually.
 
 
 ## Using local tirrex_workspace
@@ -96,6 +97,69 @@ This file is automatically read by `docker compose`, so the commands do not chan
 If you want to apply that to all services, it is also possible to directly edit
 `docker/common.yaml`.
 In any case, make sure to not commit your changes, unless you want them to apply to everyone.
+
+
+# Launching a demo
+
+The `demo` folder contains a set of examples to start various simulations or real-world experiments.
+Unlike typical use of ROS tools, it's not necessary to manually run the `ros launch` commands.
+Each demo folder contains a `compose.yaml` file that allows you to automatically launch ROS in
+containerized environments.
+To launch a demo, simply navigate to the demo folder and run:
+```
+docker compose up
+```
+This command will then start all the (non-optional) services defined in the `compose.yaml` file.
+Each service corresponds to a specific ROS command.
+
+For example, to start the demo `simu_workshop`, you have to do the following commands from the root
+of the workspace:
+```
+cd demos/example/simu_workshop
+docker compose up
+```
+
+## Better use of docker compose commands
+
+If you use the `docker compose up` command in a terminal, the terminal will be blocked while the
+demo is running.
+If you want to continue using the terminal, you can start the demo in the background with the `-d`
+option (to detach).
+```
+docker compose up -d [<service_name>] ...
+```
+By default, it starts all the non-optional services defined in the `compose.yaml` file, but you can
+start services individually by specifying their name in the command line.
+For optional services, specifying their name is required.
+
+You can view the currently running services at any time with the command:
+```
+docker compose ps
+```
+
+If you want to check the outputs of one of the services, you can use:
+```
+docker compose logs -f [<service_name>] ...
+```
+The `-f` option allows to follow the new messages in real-time.
+It is possible to combine the outputs of several services by specifying several names.
+If you do not specify any names, it will show all the logs at the same time.
+
+To stop one or several services, the command is:
+```
+docker compose stop [<service_name>] ...
+```
+If you do not specfy any names, it will stop all the non-optional services.
+
+To stop all the services (optional or not), the command is:
+```
+docker compose --profile '*' stop
+```
+
+To list all the available `docker compose` commands, you can run it without sub-commands:
+```
+docker compose
+```
 
 
 # Adding libraries or programs in the docker image
