@@ -25,7 +25,7 @@ For example, here is a screenshot of the _simu_workshop_ demo:
 * [Create your own demos](#create-your-own-demos)
 * [Using VS Code in a dev container](#using-vs-code-in-a-dev-container)
 * [Adding libraries or programs in the docker image](#adding-libraries-or-programs-in-the-docker-image)
-* [Recommended practices with git](recommended-practices-with-git)
+* [Recommended practices with git](#recommended-practices-with-git)
 
 From Tirrex workspace:
 
