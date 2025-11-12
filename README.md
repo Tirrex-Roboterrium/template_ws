@@ -6,13 +6,18 @@ To do that, it exploits the concept of
 defined by ROS.
 In this case, we use the following workspaces:
 * /opt/ros/humble (underlay)
-* tirrex_workspace (underlay)
+* /opt/tirrex_ws (underlay)
 * this workspace (overlay)
 
 It significates that if you want to modify a package that is defined in tirrex_workspace, instead of
-modifying it in tirrex_workspace, you have to clone this package into your workspace and make your
+modifying it in tirrex_workspace, you have to clone this package into this workspace and make your
 changes locally.
-This allows keeping a clean tirrex_workspace and simplify its update.
+
+This workspace contains a set of simulation demos as well as demos with real robots.
+For example, here is a screenshot of the _simu_workshop_ demo:
+
+![screenshot of the simu_workshop demo](/doc/medias/screeshot_simu_workshop.png)
+
 
 # Installation
 
@@ -130,7 +135,7 @@ docker compose up -d [<service_name>] ...
 ```
 By default, it starts all the non-optional services defined in the `compose.yaml` file, but you can
 start services individually by specifying their name in the command line.
-For optional services, specifying their name is required.
+Specifying the name also works with the optional services.
 
 The `bash` service is a special case because it needs to be interactive to run commands.
 You must use the `run` subcommand instead of `up`.
@@ -156,7 +161,7 @@ To stop one or several services, the command is:
 ```bash
 docker compose stop [<service_name>] ...
 ```
-If you do not specfy any names, it will stop all the non-optional services.
+If you do not specify any names, it will stop all the non-optional services.
 
 To stop all the services (optional or not), the command is:
 ```bash
