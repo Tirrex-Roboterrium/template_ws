@@ -16,7 +16,7 @@ changes locally.
 This workspace contains a set of simulation demos as well as demos with real robots.
 For example, here is a screenshot of the _simu_workshop_ demo:
 
-![screenshot of the simu_workshop demo](/doc/medias/screeshot_simu_workshop.png)
+![screenshot of the simu_workshop demo](/doc/medias/screenshot_simu_workshop.png)
 
 
 # Installation
