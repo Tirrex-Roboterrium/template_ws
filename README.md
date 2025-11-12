@@ -18,8 +18,24 @@ For example, here is a screenshot of the _simu_workshop_ demo:
 
 ![screenshot of the simu_workshop demo](/doc/medias/screenshot_simu_workshop.png)
 
+## Contents
 
-# Installation
+* [Installation](#installation)
+* [Launching a demo](#launching-a-demo)
+* [Create your own demos](#create-your-own-demos)
+* [Using VS Code in a dev container](#using-vs-code-in-a-dev-container)
+* [Adding libraries or programs in the docker image](#adding-libraries-or-programs-in-the-docker-image)
+* [Recommended practices with git](recommended-practices-with-git)
+
+From Tirrex workspace:
+
+* [README](https://github.com/Tirrex-Roboterrium/tirrex_workspace)
+* [FAQ](https://github.com/Tirrex-Roboterrium/tirrex_workspace?tab=readme-ov-file#faq)
+* [Configuration of the robot](https://github.com/Tirrex-Roboterrium/tirrex_workspace/doc/robot_configuration.md)
+* [Configuration of the devices](https://github.com/Tirrex-Roboterrium/tirrex_workspace/doc/devices_configuration.md)
+* [Description of the robot control node](https://github.com/Tirrex-Roboterrium/tirrex_workspace/doc/robot_control.md)
+
+## Installation
 
 This project is just a template to create your own workspace.
 Instead of cloning the repository using the "code" button of the web interface, you will create your
@@ -70,7 +86,7 @@ your workspace or tirrex_workspace.
 However, it is better to [use a demo](#launching-a-demo) rather than starting launch manually.
 
 
-## Using local tirrex_workspace
+### Using local tirrex_workspace
 
 This approach is not recommended, but if you want to use a local copy of tirrex_workspace instead of
 the one that is included in the docker image, you can follow these instructions.
@@ -104,7 +120,7 @@ If you want to apply that to all services, it is also possible to directly edit
 In any case, make sure to not commit your changes, unless you want them to apply to everyone.
 
 
-# Launching a demo
+## Launching a demo
 
 The `demo` folder contains a set of examples to start various simulations or real-world experiments.
 Unlike typical use of ROS tools, it's not necessary to manually run the `ros launch` commands.
@@ -124,7 +140,7 @@ cd demos/example/simu_workshop
 docker compose up
 ```
 
-## Better use of docker compose commands
+### Better use of docker compose commands
 
 If you use the `docker compose up` command in a terminal, the terminal will be blocked while the
 demo is running.
@@ -174,7 +190,7 @@ docker compose
 ```
 
 
-# Create your own demos
+## Create your own demos
 
 The demos in the `demos/examples` directory should not be modified.
 This folder is a shared git subproject across all workspaces based on template_ws.
@@ -200,7 +216,7 @@ ln -sfr .env demos/<your_demo_name>/.env
 ```
 
 
-# Using VS Code in a dev container
+## Using VS Code in a dev container
 
 If you use VS Code as your IDE, you can open it in the containerized environment.
 You will then have access to auto-completion and be able to browse the files of the embedded Tirrex
@@ -219,7 +235,7 @@ package you want to modify into your workspace.
 Local packages will always take precedence when they also exist in the underlay workspace.
 
 
-# Adding libraries or programs in the docker image
+## Adding libraries or programs in the docker image
 
 If you want to install programs using `apt install`, you can add them in the
 [Dockerfile](Dockerfile).
@@ -248,7 +264,7 @@ If you want more information about managing these dependencies, you can read the
 [rosdep tutorial](https://docs.ros.org/en/humble/Tutorials/Intermediate/Rosdep.html).
 
 
-# Recommended practices with git
+## Recommended practices with git
 
 You have to create a different git project for every ROS package (or group of dependent packages)
 and handle them using [`vcstool`](https://github.com/dirk-thomas/vcstool).
