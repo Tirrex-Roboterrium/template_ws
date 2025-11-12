@@ -6,6 +6,7 @@
     "dockerComposeFile": "../compose.yaml",
     "service": "dev",
     "workspaceFolder": "${localWorkspaceFolder}",
+    "runArgs": ["--name", "vscode-${name}"],  // change the name of the docker image
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": { }
     },

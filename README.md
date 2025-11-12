@@ -84,7 +84,7 @@ echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
 
 Now, you can create a `compose.override.yaml` file to change some parameters of the default
 `compose.yaml`.
-For example, to override the `compile` and `bash` services, the file will look like this:
+For example, to override the `compile` service, the file will look like this:
 ```yaml
 services:
   compile:
@@ -193,6 +193,25 @@ From the root of the workspace, execute:
 ```bash
 ln -sfr .env demos/<your_demo_name>/.env
 ```
+
+
+# Using VS Code in a dev container
+
+If you use VS Code as your IDE, you can open it in the containerized environment.
+You will then have access to auto-completion and be able to browse the files of the embedded Tirrex
+workspace located in `/opt/tirrex_ws`.
+The IDE terminals will also be in the workspace's ROS environment.
+To configure it, you can follow these steps:
+* Open the workspace in VS Code (using the bash command `code .` from the root of the workspace)
+* Install the _Dev Containers_ extension (Ctrl+Shift+X > "Dev Containers")
+* Reopen the workspace in the Dev Container (Ctrl+Shift+P > "reopen in dev container")
+* Add the Tirrex workspace to the explorer (File > Add folder to workspace > `/opt/tirrex_ws`)
+
+It is not possible to modify the files in `/opt/tirrex_ws`.
+Adding them to the file explorer only allows you to view the complete Tirrex source code.
+If you need to make modifications, you will have to clone the Git project corresponding to the
+package you want to modify into your workspace.
+Local packages will always take precedence when they also exist in the underlay workspace.
 
 
 # Adding libraries or programs in the docker image
