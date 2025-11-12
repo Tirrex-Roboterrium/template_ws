@@ -114,7 +114,7 @@ Each service corresponds to a specific ROS command.
 
 For example, to start the demo `simu_workshop`, you have to do the following commands from the root
 of the workspace:
-```
+```bash
 cd demos/example/simu_workshop
 docker compose up
 ```
@@ -125,20 +125,27 @@ If you use the `docker compose up` command in a terminal, the terminal will be b
 demo is running.
 If you want to continue using the terminal, you can start the demo in the background with the `-d`
 option (to detach).
-```
+```bash
 docker compose up -d [<service_name>] ...
 ```
 By default, it starts all the non-optional services defined in the `compose.yaml` file, but you can
 start services individually by specifying their name in the command line.
 For optional services, specifying their name is required.
 
-You can view the currently running services at any time with the command:
+The `bash` service is a special case because it needs to be interactive to run commands.
+You must use the `run` subcommand instead of `up`.
+And to avoid keeping unnecessary containers, you should add the `--rm` option.
+```bash
+docker compose run --rm bash
 ```
+
+You can view the currently running services at any time with the command:
+```bash
 docker compose ps
 ```
 
 If you want to check the outputs of one of the services, you can use:
-```
+```bash
 docker compose logs -f [<service_name>] ...
 ```
 The `-f` option allows to follow the new messages in real-time.
@@ -146,19 +153,45 @@ It is possible to combine the outputs of several services by specifying several 
 If you do not specify any names, it will show all the logs at the same time.
 
 To stop one or several services, the command is:
-```
+```bash
 docker compose stop [<service_name>] ...
 ```
 If you do not specfy any names, it will stop all the non-optional services.
 
 To stop all the services (optional or not), the command is:
-```
+```bash
 docker compose --profile '*' stop
 ```
 
 To list all the available `docker compose` commands, you can run it without sub-commands:
-```
+```bash
 docker compose
+```
+
+
+# Create your own demos
+
+The demos in the `demos/examples` directory should not be modified.
+This folder is a shared git subproject across all workspaces based on template_ws.
+If you need to modify their configuration for your own workspace, the easiest way is to copy one of
+the examples and place it directly in the `demos` folder.
+This will then be versioned with your workspace's commits.
+However, changing the folder requires modifying the `compose.yaml` file.
+You need to correct the `file:` line so that it points to the correct path of the
+`docker/common.yaml` file (containing the main docker settings):
+```yaml
+x-yaml-anchors:
+  base: &base
+    extends:
+      file: ../../docker/common.yaml  # line to modify
+      service: x11_base
+```
+
+You must also adapt the symbolic link `.env` so that it references the one located at the root of
+the workspace.
+From the root of the workspace, execute:
+```bash
+ln -sfr .env demos/<your_demo_name>/.env
 ```
 
 
