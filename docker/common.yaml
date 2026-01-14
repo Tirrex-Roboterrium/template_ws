@@ -35,6 +35,7 @@ services:
     environment:
       - WORKSPACE  # add explicit WORKSPACE and USER to fix a bug in compose v2.34.0
       - USER
+      - HOME
       # - ROS_LOCALHOST_ONLY=1  # avoid sending multicast on the local network of your office
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - CYCLONEDDS_URI=file:///dds_config/cyclonedds.xml  # this replaces ROS_LOCALHOST_ONLY=1
@@ -42,7 +43,6 @@ services:
     network_mode: host
     pid: host  # fix a multicast problem, PID are used by DDS to generate unique GUID
     ipc: host  # used by ROS2, Qt and X11 (for shared memory)
-    privileged: false
     stop_signal: SIGINT  # Correctly forward SIGINT on services started with 'compose up'
 
   build:
@@ -61,7 +61,7 @@ services:
     extends:
       service: base
     volumes:
-      - /dev:/dev:Z  # bind all devices
+      - /dev/input:/dev/input:Z  # for joypads
       - /tmp/.X11-unix:/tmp/.X11-unix:Z
       - $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:Z
       - type: bind
@@ -75,12 +75,12 @@ services:
       - XDG_RUNTIME_DIR
       - GAZEBO_RESOURCE_PATH
       - GAZEBO_MODEL_PATH
-    device_cgroup_rules:  # read/write access to device files
-      - 'c 13:* rmw'   # joystick
-      - 'c 81:* rmw'   # video4linux (realsense)
-      - 'c 166:* rmw'  # USB ACM modems (Drotek, ...)
-      - 'c 188:* rmw'  # USB serial converter (xsens, ...)
-      - 'c 189:* rmw'  # alternative USB serial converter (realsense)
+    # device_cgroup_rules:  # read/write access to device files
+    #   - 'c 13:* rmw'   # joystick
+    #   - 'c 81:* rmw'   # video4linux (realsense)
+    #   - 'c 166:* rmw'  # USB ACM modems (Drotek, ...)
+    #   - 'c 188:* rmw'  # USB serial converter (xsens, ...)
+    #   - 'c 189:* rmw'  # alternative USB serial converter (realsense)
   
   x11_gpu:  # used by services which requires GPU (and GUI)
     extends:

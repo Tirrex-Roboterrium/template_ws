@@ -22,7 +22,7 @@ initialize_env_file() {
   add_variable_to_env_file GID "$(id -g)"
   add_variable_to_env_file USER "$(whoami)"
   add_variable_to_env_file WORKSPACE "$(pwd)"
-  add_variable_to_env_file IMAGE_NAME "$(basename $(pwd)):$(whoami)"
+  add_variable_to_env_file IMAGE_NAME "$(basename $(pwd)):latest"
 }
 
 # Create files and directories that are binded by docker services.
