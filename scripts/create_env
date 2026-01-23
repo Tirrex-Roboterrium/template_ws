@@ -4,7 +4,7 @@ set -e
 cd "$(dirname -- "${BASH_SOURCE[0]}")/.."
 
 variable_exists_in_env() {
-  grep -q "$1=" .env 2>/dev/null
+  grep -q "^$1=" .env 2>/dev/null
   return $?
 }
 

@@ -6,16 +6,14 @@
     "dockerComposeFile": "../compose.yaml",
     "service": "dev",
     "workspaceFolder": "${localWorkspaceFolder}",
-    "runArgs": ["--name", "vscode-${name}"],  // change the name of the docker image
     "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": { }
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
     "postCreateCommand": "echo >>~/.bashrc 'source /ros_setup.sh'",
     "mounts": [
         "source=projectname-bashhistory,target=/commandhistory,type=volume",
         "source=${localEnv:HOME}/.config/clang-format,target=/clang-format,type=bind,consistency=cached"
     ],
-
     // Set *default* container specific settings.json values on container create.
     "customizations": {
         "vscode": {
@@ -35,14 +33,12 @@
                 },
                 "search.useIgnoreFiles": true,
                 "cmake.ignoreCMakeListsMissing": true,
-
                 "[cpp]": {
                     "editor.defaultFormatter": "ms-vscode.cpptools"
                 },
                 "C_Cpp.clang_format_style": "file:/clang-format/clang-format",
                 "C_Cpp.default.cppStandard": "c++17",
                 "C_Cpp.default.cStandard": "c11",
-
                 "[python]": {
                     "editor.defaultFormatter": "ms-python.autopep8"
                 },
@@ -50,7 +46,6 @@
                     "--max-line-length=100"
                 ],
                 "python.defaultInterpreterPath": "/usr/bin/python3",
-
                 "[xml]": {
                     "editor.defaultFormatter": "redhat.vscode-xml"
                 },
@@ -59,7 +54,6 @@
                     "editor.defaultFormatter": "redhat.vscode-yaml"
                 },
                 "yaml.format.printWidth": 100
-
                 // automatically add C++ and python path
                 ros.rosSetupScript: "/opt/tirrex_ws/install/setup.bash",
             },
