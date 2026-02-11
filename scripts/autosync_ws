@@ -50,7 +50,7 @@ echo
 echo "Listen local changes and send them to '${host}:${remote_path}'"
 echo "Listening..."
 
-while inotifywait -rqq -emodify -ecreate -emove -edelete --exclude '\.git' -- $sync_list ; do
+while inotifywait -rqq -emodify -ecreate -emove -edelete -edelete_self --exclude '\.git' -- $sync_list ; do
   echo -e "\e[1m$(date +%X) change detected, updating remote\e[0m"
   sync_files
 done
