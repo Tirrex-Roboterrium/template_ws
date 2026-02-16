@@ -61,7 +61,6 @@ services:
     extends:
       service: base
     volumes:
-      - /dev/input:/dev/input:Z  # for joypads
       - /tmp/.X11-unix:/tmp/.X11-unix:Z
       - $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:Z
       - type: bind
@@ -70,6 +69,8 @@ services:
         bind:
           create_host_path: false
           selinux: Z
+    devices:
+      - /dev/input  # for joypads
     environment:
       - DISPLAY
       - XDG_RUNTIME_DIR
