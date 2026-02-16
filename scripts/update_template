@@ -51,5 +51,6 @@ update_git_file "$template" scripts/autosync_ws +x
 update_git_file "$template" scripts/create_env +x
 update_git_file "$template" scripts/create_ws +x
 update_git_file "$template" scripts/sync_data +x
+update_git_file "$template" .dockerignore
 
 exit 0
