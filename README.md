@@ -18,6 +18,7 @@ For example, here is a screenshot of the _simu_workshop_ demo:
 
 ![screenshot of the simu_workshop demo](/doc/medias/screenshot_simu_workshop.png)
 
+
 ## Contents
 
 * [Installation](#installation)
@@ -35,17 +36,19 @@ From Tirrex workspace:
 * [Configuration of the devices](https://github.com/Tirrex-Roboterrium/tirrex_workspace/doc/devices_configuration.md)
 * [Description of the robot control node](https://github.com/Tirrex-Roboterrium/tirrex_workspace/doc/robot_control.md)
 
-## Installation
+
+## Create your own workspace
 
 This project is just a template to create your own workspace.
-Instead of cloning the repository using the "code" button of the web interface, you will create your
-own version by clicking the "fork" button.
+It is possible to use it as is, but if you want to make your own developments, it is better to fork
+it or create a new git project based on this files.
+Instead of cloning the repository using the "code" button of the web interface (gitlab), you will
+create your own version by clicking the "fork" button.
 This action open a new page to specify the name and the namespace of the workspace.
 Choose a name that best describes what you want to do (example: a short title of your PhD thesis or
 the name of your research project) and select the correct namespace of your research group.
-If you don't know it, ask your supervisors.
 
-You first need to download it using `git clone`.
+After that, you can download it using `git clone`.
 Replace the `<elements>` by the correct values
 ```bash
 git clone git@<URL_of_your_group>/<name_of_your_project>.git
@@ -54,12 +57,50 @@ If you receive an error message specifying you don't have permission to use ssh 
 can follow theses instructions:
 [Cloning by SSH](https://forge.inrae.fr/tscf/knowledge/-/blob/main/git/git_clone_project.md?ref_type=heads#cloning-by-ssh).
 
+
+## Installation
+
+### Prerequisites
+
+This workspace is based on the docker image `ghcr.io/tirrex-roboterrium/tirrex_workspace:full` that
+contains a pre-compiled version of the tirrex workspace.
+Therefore, you need to install docker by [following the instruction on the docker
+documentation](https://docs.docker.com/compose/install/linux/), but it is also possible to use
+[podman](https://podman.io/) instead.
+In this case, you just have to replace all `docker` command by `podman`.
+Once docker is installed, you can check that the docker compose version is greater or equal to
+`2.20` (the current one is `>5.0`) using the command:
+```
+docker compose version
+```
+
+By default, running docker is only available for root user.
+It is possible to use it in rootless mode, but you have to [adapt its
+configuration](https://docs.docker.com/engine/security/rootless/).
+Bear in mind that by executing docker commands in rootful mode, you are giving your user privileges
+equivalent to those of root.
+For more details, see [Docker Daemon Attack
+Surface](https://docs.docker.com/engine/security/#docker-daemon-attack-surface)
+
+For the rootful mode, you have to add your user to the `docker` group (and create it if it does not
+exist) to execute docker commands with your own user.
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+To apply the changes, you need to reboot (or just restart the docker daemon and reopen your
+session).
+
+### Configuring
+
 From the root of the workspace, execute the script `create_ws` to create a `.env` that contains
 some environment variables useful to build the docker images, and also clone demos examples.
+This script will also clone all git projects specified in the `docker/repositories` file.
 ```bash
-cd <name_of_your_project>
 ./scripts/create_ws
 ```
+
+### Compiling
 
 This script will try to find the directory `tirrex_workspace` or `tirrex_ws` at the same level of
 this one.
@@ -84,40 +125,6 @@ This command starts an interactive docker container in your workspace.
 Everything is already sourced, so you can execute any `ros2 run` or `ros2 launch` with a package of
 your workspace or tirrex_workspace.
 However, it is better to [use a demo](#launching-a-demo) rather than starting launch manually.
-
-
-### Using local tirrex_workspace
-
-This approach is not recommended, but if you want to use a local copy of tirrex_workspace instead of
-the one that is included in the docker image, you can follow these instructions.
-
-You first need to install tirrex_workspace by following instructions in the
-[README of this workspace](https://github.com/Tirrex-Roboterrium/tirrex_workspace).
-If you are an INRAE developer, you have to follow the specific instructions (there is a section
-after installation) and use the repository from the INRAE forge.
-This workspace must be installed outside of this project.
-
-After that, you have to define an environment variable `TIRREX_WORKSPACE` that contains the path of
-the tirrex workspace you just have installed
-```bash
-echo >>.env TIRREX_WORKSPACE="<path/to/tirrex/workspace>"
-```
-
-Now, you can create a `compose.override.yaml` file to change some parameters of the default
-`compose.yaml`.
-For example, to override the `compile` service, the file will look like this:
-```yaml
-services:
-  compile:
-    volumes:
-      - ${TIRREX_WORKSPACE}:${TIRREX_WORKSPACE}:ro
-    environment:
-      - TIRREX_WORKSPACE=${TIRREX_WORKSPACE}
-```
-This file is automatically read by `docker compose`, so the commands do not change.
-If you want to apply that to all services, it is also possible to directly edit
-`docker/common.yaml`.
-In any case, make sure to not commit your changes, unless you want them to apply to everyone.
 
 
 ## Launching a demo
@@ -221,7 +228,8 @@ ln -sfr .env demos/<your_demo_name>/.env
 If you use VS Code as your IDE, you can open it in the containerized environment.
 You will then have access to auto-completion and be able to browse the files of the embedded Tirrex
 workspace located in `/opt/tirrex_ws`.
-The IDE terminals will also be in the workspace's ROS environment.
+The IDE terminals will also be in the workspace's ROS environment, so the ROS commands will be
+available.
 To configure it, you can follow these steps:
 * Open the workspace in VS Code (using the bash command `code .` from the root of the workspace)
 * Install the _Dev Containers_ extension (Ctrl+Shift+X > "Dev Containers")

@@ -1,4 +1,4 @@
-ARG FROM_IMAGE=ghcr.io/tirrex-roboterrium/tirrex_workspace:full
+ARG FROM_IMAGE
 
 FROM ${FROM_IMAGE}
 
