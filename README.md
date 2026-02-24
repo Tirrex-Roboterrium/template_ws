@@ -91,6 +91,11 @@ sudo usermod -aG docker $USER
 To apply the changes, you need to reboot (or just restart the docker daemon and reopen your
 session).
 
+This workspace also use the `vcs` command to manage the packages included in`src/` or `demos/`.
+If you have installed ROS on your system, the command is already installed.
+If not, you can install it using `apt install vcstool` (for Ubuntu 24) or using `pip`.
+
+
 ### Configuring
 
 From the root of the workspace, execute the script `create_ws` to create a `.env` that contains
