@@ -10,7 +10,7 @@ services:
       file: docker/common.yaml
       service: x11_base
     profiles: [optional]
-    command: bash --rcfile /etc/bash.bashrc
+    command: bash
 
   dev:  # start a container used by IDEs like VS-code
     extends:

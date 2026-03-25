@@ -71,6 +71,7 @@ services:
           selinux: Z
     devices:
       - /dev/input  # for joypads
+      - /dev/dri    # for graphic cards / chipsets
     environment:
       - DISPLAY
       - XDG_RUNTIME_DIR
